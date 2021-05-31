@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js'></script>
-    <link rel="stylesheet" type="text/css" href="churn_vis.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
 <body>
@@ -71,7 +71,7 @@
                     .enter()
                     .append("tr")
                     .on("click", function (d) {
-                        local_url = new URL(window.location.origin + "/flask/single_view.html")
+                        local_url = new URL(window.location.origin + "/app/single_view.html")
                         _.each(d.data, function (values, keys) {
                             local_url.searchParams.set(keys, values)
                         })

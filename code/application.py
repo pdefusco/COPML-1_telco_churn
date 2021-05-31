@@ -8,7 +8,12 @@
 
 # This has to be here until DSE-16317 is fixed.
 !pip3 install -r requirements.txt
+!pip3 install requests-kerberos==0.12.0 flask==1.1.2 boto3==1.17.84
 !pip3 install --upgrade git+https://github.com/fletchjeff/cmlbootstrap#egg=cmlbootstrap
+
+  
+import sys
+sys.path.insert(1, '/home/cdsw/code')
 
 from flask import Flask, send_from_directory, request
 from IPython.display import Javascript, HTML
@@ -22,6 +27,8 @@ import logging
 import subprocess
 from IPython.display import Image
 from cmlbootstrap import CMLBootstrap
+
+
 
 Image("images/table_view.png")
 #
@@ -61,6 +68,7 @@ log.setLevel(logging.ERROR)
 
 # Load the explained model
 em = ExplainedModel(model_name='telco_linear', data_dir='/home/cdsw')
+cml = CMLBootstrap()
 
 # Creates an explained version of a partiuclar data point. This is almost exactly the same as the data used in the model serving code.
 
@@ -91,12 +99,12 @@ flask_app = Flask(__name__, static_url_path='')
 
 @flask_app.route('/')
 def home():
-    return "<script> window.location.href = '/flask/table_view.html'</script>"
+    return "<script> window.location.href = '/app/index.html'</script>"
 
 
-@flask_app.route('/flask/<path:path>')
+@flask_app.route('/app/<path:path>')
 def send_file(path):
-    return send_from_directory('flask', path)
+    return send_from_directory('app', path)
 
 # Grabs a sample explained dataset for 10 randomly selected customers.
 
@@ -125,10 +133,9 @@ def stats():
 
 @flask_app.route("/model_access_keys")
 def model_access_keys():
-  cml = CMLBootstrap()
   project_id = cml.get_project()['id']
   params = {"projectId":project_id,"latestModelDeployment":True,"latestModelBuild":True}
-  model_id = cml.get_models(params)['id']
+  model_id = cml.get_models(params)[0]['id']
   latest_model = cml.get_model({"id": model_id, "latestModelDeployment": True, "latestModelBuild": True})
   return jsonify({
     'model_access_key': latest_model['accessKey']
@@ -141,3 +148,5 @@ HTML("<a href='https://{}.{}'>Open Table View</a>".format(
 # Launches flask. Note the host and port details. This is specific to CML/CDSW
 if __name__ == "__main__":
     flask_app.run(host='127.0.0.1', port=int(os.environ['CDSW_APP_PORT']))
+    
+    

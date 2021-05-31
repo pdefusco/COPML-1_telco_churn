@@ -22,19 +22,8 @@ import requests
 import xml.etree.ElementTree as ET
 import datetime
 
-run_time_suffix = datetime.datetime.now()
-run_time_suffix = run_time_suffix.strftime("%d%m%Y%H%M%S")
-
-# Set the setup variables needed by CMLBootstrap
-HOST = os.getenv("CDSW_API_URL").split(
-    ":")[0] + "://" + os.getenv("CDSW_DOMAIN")
-USERNAME = os.getenv("CDSW_PROJECT_URL").split(
-    "/")[6]  # args.username  # "vdibia"
-API_KEY = os.getenv("CDSW_API_KEY") 
-PROJECT_NAME = os.getenv("CDSW_PROJECT")  
-
 # Instantiate API Wrapper
-cml = CMLBootstrap(HOST, USERNAME, API_KEY, PROJECT_NAME)
+cml = CMLBootstrap()
 
 # Set the STORAGE environment variable
 try : 

@@ -18,7 +18,7 @@ tasks:
   - type: create_job
     name: Check Model
     entity_label: check_model
-    script: code/check_model.py
+    script: code/model_check.py
     arguments: None
     short_summary: Job to train models
     kernel: python3

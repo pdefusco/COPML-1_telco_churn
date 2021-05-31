@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js'></script>
-    <link rel="stylesheet" type="text/css" href="churn_vis.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
 <body>
@@ -16,7 +16,13 @@
     </div>
     <div id='features' style='clear:both;'></div>
     <script>
-        const accessKey = "mw7bacemth47dltih55nn9308pfq1hj6";
+        const model_key_url = window.location.origin + '/model_access_keys'
+        fetch(model_key_url)
+        .then(response => response.json())
+        .then(function(data) {
+            const accessKey = data.model_access_key
+
+
         in_url = new URL(window.location.href)
         out_url = new URL(window.location.origin + window.location.pathname)
 
@@ -181,5 +187,6 @@
 
                 )
         }).catch(err => alert("Unable to connect to the model. Please check the model is running and that you have updated the model access key."));
+    })
     </script>
 </body>

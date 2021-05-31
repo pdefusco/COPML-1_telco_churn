@@ -51,17 +51,11 @@ import sqlite3
 # Get the model id from the model you deployed in step 5. These are unique to each 
 # model on CML.
 
-model_id = "76"
+cml = CMLBootstrap()
+project_id = cml.get_project()['id']
+params = {"projectId":project_id,"latestModelDeployment":True,"latestModelBuild":True}
+model_id = cml.get_models(params)[0]['id']
 
-# Get the various Model CRN details
-HOST = os.getenv("CDSW_API_URL").split(
-    ":")[0] + "://" + os.getenv("CDSW_DOMAIN")
-USERNAME = os.getenv("CDSW_PROJECT_URL").split(
-    "/")[6]  # args.username  # "vdibia"
-API_KEY = os.getenv("CDSW_API_KEY") 
-PROJECT_NAME = os.getenv("CDSW_PROJECT")  
-
-cml = CMLBootstrap(HOST, USERNAME, API_KEY, PROJECT_NAME)
 
 latest_model = cml.get_model({"id": model_id, "latestModelDeployment": True, "latestModelBuild": True})
 
