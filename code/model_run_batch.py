@@ -33,16 +33,6 @@ latest_model = cml.get_model({"id": model_id, "latestModelDeployment": True, "la
 
 Model_CRN = latest_model ["crn"]
 Deployment_CRN = latest_model["latestModelDeployment"]["crn"]
-#model_endpoint = HOST.split("//")[0] + "//modelservice." + HOST.split("//")[1] + "/model"
-
-# This will randomly return True for input and increases the likelihood of returning 
-# true based on `percent`
-def churn_error(item,percent):
-  if random.random() < percent:
-    return True
-  else:
-    return True if item=='Yes' else False
-
   
 # Get 1000 samples  
 df_sample = df.sample(1000)
@@ -65,12 +55,15 @@ prediciton_df.columns = ['uuid','prediction','customerID']
 
 final_df = pd.merge(df_sample_clean,prediciton_df,left_on=["customerID"],right_on= ['customerID'], how='left')  
 
+#write to hive
+time_stamp = int(round(time.time() * 1000))
+final_sdf = spark.createDataFrame(final_df)
+final_sdf = final_sdf.withColumn("time_stamp",lit(time_stamp))
+
+final_sdf.write.mode('append').format('parquet').saveAsTable('telco_churn_batch')
+
+# update metrics
 
 final_df.apply(update_metrics,axis=1)
- 
 accuracy = classification_report(final_df['Churn'].to_numpy(),final_df['prediction'].to_numpy(),output_dict=True)["accuracy"]
-
-
-cdsw.track_aggregate_metrics({"accuracy": accuracy}, int(round(time.time() * 1000)) , int(round(time.time() * 1000)), model_deployment_crn=Deployment_CRN)
-
-
+cdsw.track_aggregate_metrics({"accuracy": accuracy}, int(round(time.time() * 1000)) , int(round(time.time() * 1000))+100, model_deployment_crn=Deployment_CRN)

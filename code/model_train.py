@@ -81,6 +81,7 @@
 # output file.
 #
 
+sys.path.insert(1, '/home/cdsw/code')
 
 from pyspark.sql.types import *
 from pyspark.sql import SparkSession
@@ -94,6 +95,7 @@ import dill
 import pandas as pd
 import numpy as np
 import cdsw
+from cmlbootstrap import CMLBootstrap
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
@@ -223,10 +225,42 @@ explainedmodel.save()
 
 # If running as as experiment, this will track the metrics and add the model trained in this
 # training run to the experiment history.
-cdsw.track_metric("train_score", round(train_score, 2))
-cdsw.track_metric("test_score", round(test_score, 2))
-cdsw.track_metric("model_path", explainedmodel.model_path)
-cdsw.track_file(explainedmodel.model_path)
+#cdsw.track_metric("train_score", round(train_score, 2))
+#cdsw.track_metric("test_score", round(test_score, 2))
+#cdsw.track_metric("model_path", explainedmodel.model_path)
+#cdsw.track_file(explainedmodel.model_path)
+
+#write to hive
+time_stamp = int(round(time.time() * 1000))
+final_sdf = spark.createDataFrame(df)
+final_sdf = final_sdf.withColumn("time_stamp",lit(time_stamp))
+final_sdf.write.mode('append').format('parquet').saveAsTable('telco_churn_train')
+
+
+cml = CMLBootstrap()
+project_id = cml.get_project()['id']
+params = {"projectId":project_id,"latestModelDeployment":True,"latestModelBuild":True}
+model_id = cml.get_models(params)[0]['id']
+latest_model = cml.get_model({"id": model_id, "latestModelDeployment": True, "latestModelBuild": True})
+
+
+default_engine_details = cml.get_default_engine({})
+default_engine_image_id = default_engine_details["id"]
+build_model_params = {
+  	"modelId": latest_model['latestModelBuild']['modelId'],
+    "projectId": latest_model['latestModelBuild']['projectId'],
+    "targetFilePath": "code/model_serve.py",
+    "targetFunctionName": "explain",
+    "engineImageId": default_engine_image_id,
+    "kernel": "python3",
+    "examples": latest_model['latestModelBuild']['examples'],
+    "cpuMillicores": 1000,
+    "memoryMb": 2048,
+    "nvidiaGPUs": 0,
+    "replicationPolicy": {"type": "fixed", "numReplicas": 1},
+    "environment": {}}
+
+cml.rebuild_model(build_model_params)
 
 # Wrap up
 
