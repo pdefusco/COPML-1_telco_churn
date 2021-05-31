@@ -3,4 +3,4 @@
     - "default.telco_churn_train@cm"
   metadata:
     training_file: "code/model_train.py"
-    training_date: "1622484733411"
+    training_date: "1622486197523"

@@ -6,6 +6,7 @@ from sklearn.metrics import classification_report
 from cmlbootstrap import CMLBootstrap
 import seaborn as sns
 import copy
+from pyspark.sql.functions import lit
 
 
 ## Set the model ID
