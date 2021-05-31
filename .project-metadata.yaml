@@ -74,7 +74,7 @@ tasks:
 
   - type: start_application
     name: Application to Serve Churn UI
-    subdomain: copml-churn-app
+    subdomain: copmlchurnapp
     script: code/application.py
     kernel: python3
     memory: 1
