@@ -12,38 +12,28 @@
 !pip3 install -r requirements.txt
 
 # Create the directories and upload data
-
 from cmlbootstrap import CMLBootstrap
-from IPython.display import Javascript, HTML
 import os
-import time
-import json
-import requests
-import xml.etree.ElementTree as ET
-import datetime
 
 # Instantiate API Wrapper
 cml = CMLBootstrap()
 
 # Set the STORAGE environment variable
+# Set the STORAGE environment variable
 try : 
   storage=os.environ["STORAGE"]
 except:
-  if os.path.exists("/etc/hadoop/conf/hive-site.xml"):
-    tree = ET.parse('/etc/hadoop/conf/hive-site.xml')
-    root = tree.getroot()
-    for prop in root.findall('property'):
-      if prop.find('name').text == "hive.metastore.warehouse.dir":
-        storage = prop.find('value').text.split("/")[0] + "//" + prop.find('value').text.split("/")[2]
-  else:
-    storage = "/user/" + os.getenv("HADOOP_USER_NAME")
-  storage_environment_params = {"STORAGE":storage}
-  storage_environment = cml.create_environment_variable(storage_environment_params)
-  os.environ["STORAGE"] = storage
+  try:
+    storage = cml.get_cloud_storage()
+    storage_environment_params = {"STORAGE":storage}
+    storage_environment = cml.create_environment_variable(storage_environment_params)
+    os.environ["STORAGE"] = storage
+  except:
+    storage = "/user/" + os.environ["HADOOP_USER_NAME"]
 
 # Upload the data to the cloud storage
-!hdfs dfs -mkdir -p $STORAGE/datalake
-!hdfs dfs -mkdir -p $STORAGE/datalake/data
-!hdfs dfs -mkdir -p $STORAGE/datalake/data/churn
-!hdfs dfs -copyFromLocal /home/cdsw/raw/WA_Fn-UseC_-Telco-Customer-Churn-.csv $STORAGE/datalake/data/churn/WA_Fn-UseC_-Telco-Customer-Churn-.csv
-
+!hdfs dfs -mkdir -p $STORAGE/user
+!hdfs dfs -mkdir -p $STORAGE/user/$HADOOP_USER_NAME
+!hdfs dfs -mkdir -p $STORAGE/user/$HADOOP_USER_NAME/data
+!hdfs dfs -mkdir -p $STORAGE/user/$HADOOP_USER_NAME/data/churn
+!hdfs dfs -copyFromLocal /home/cdsw/raw/WA_Fn-UseC_-Telco-Customer-Churn-.csv $STORAGE/user/$HADOOP_USER_NAME/data/churn/WA_Fn-UseC_-Telco-Customer-Churn-.csv

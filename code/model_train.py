@@ -1,85 +1,5 @@
 # Part 4: Model Training
 
-# This script is used to train an Explained model and also how to use the
-# Jobs to run model training and the Experiments feature of CML to facilitate model
-# tuning.
-
-# If you haven't yet, run through the initialization steps in the README file and Part 1.
-# In Part 1, the data is imported into the `default.telco_churn` table in Hive.
-# All data accesses fetch from Hive.
-#
-# To simply train the model once, run this file in a workbench session.
-#
-# There are 2 other ways of running the model training process
-#
-# ***Scheduled Jobs***
-#
-# The **[Jobs](https://docs.cloudera.com/machine-learning/cloud/jobs-pipelines/topics/ml-creating-a-job.html)**
-# feature allows for adhoc, recurring and depend jobs to run specific scripts. To run this model
-# training process as a job, create a new job by going to the Project window and clicking _Jobs >
-# New Job_ and entering the following settings:
-# * **Name** : Train Mdoel
-# * **Script** : 4_train_models.py
-# * **Arguments** : _Leave blank_
-# * **Kernel** : Python 3
-# * **Schedule** : Manual
-# * **Engine Profile** : 1 vCPU / 2 GiB
-# The rest can be left as is. Once the job has been created, click **Run** to start a manual
-# run for that job.
-
-# ***Experiments***
-#
-# Training a model for use in production requires testing many combinations of model parameters
-# and picking the best one based on one or more metrics.
-# In order to do this in a *principled*, *reproducible* way, an Experiment executes model training code with **versioning** of the **project code**, **input parameters**, and **output artifacts**.
-# This is a very useful feature for testing a large number of hyperparameters in parallel on elastic cloud resources.
-
-# **[Experiments](https://docs.cloudera.com/machine-learning/cloud/experiments/topics/ml-running-an-experiment.html)**.
-# run immediately and are used for testing different parameters in a model training process.
-# In this instance it would be use for hyperparameter optimisation. To run an experiment, from the
-# Project window click Experiments > Run Experiment with the following settings.
-# * **Script** : 4_train_models.py
-# * **Arguments** : 5 lbfgs 100 _(these the cv, solver and max_iter parameters to be passed to
-# LogisticRegressionCV() function)
-# * **Kernel** : Python 3
-# * **Engine Profile** : 1 vCPU / 2 GiB
-
-# Click **Start Run** and the expriment will be sheduled to build and run. Once the Run is
-# completed you can view the outputs that are tracked with the experiment using the
-# `cdsw.track_metrics` function. It's worth reading through the code to get a sense of what
-# all is going on.
-
-# More Details on Running Experiments
-# Requirements
-# Experiments have a few requirements:
-# - model training code in a `.py` script, not a notebook
-# - `requirements.txt` file listing package dependencies
-# - a `cdsw-build.sh` script containing code to install all dependencies
-#
-# These three components are provided for the churn model as `4_train_models.py`, `requirements.txt`,
-# and `cdsw-build.sh`, respectively.
-# You can see that `cdsw-build.sh` simply installs packages from `requirements.txt`.
-# The code in `4_train_models.py` is largely identical to the code in the last notebook.
-# with a few differences.
-#
-# The first difference from the last notebook is at the "Experiments options" section.
-# When you set up a new Experiment, you can enter
-# [**command line arguments**](https://docs.python.org/3/library/sys.html#sys.argv)
-# in standard Python fashion.
-# This will be where you enter the combination of model hyperparameters that you wish to test.
-#
-# The other difference is at the end of the script.
-# Here, the `cdsw` package (available by default) provides
-# [two methods](https://docs.cloudera.com/machine-learning/cloud/experiments/topics/ml-tracking-metrics.html)
-# to let the user evaluate results.
-#
-# **`cdsw.track_metric`** stores a single value which can be viewed in the Experiments UI.
-# Here we store two metrics and the filepath to the saved model.
-#
-# **`cdsw.track_file`** stores a file for later inspection.
-# Here we store the saved model, but we could also have saved a report csv, plot, or any other
-# output file.
-#
 
 sys.path.insert(1, '/home/cdsw/code')
 
@@ -237,6 +157,7 @@ final_sdf = final_sdf.withColumn("time_stamp",lit(time_stamp))
 final_sdf.write.mode('append').format('parquet').saveAsTable('telco_churn_train')
 
 
+# Redploy the model
 cml = CMLBootstrap()
 project_id = cml.get_project()['id']
 params = {"projectId":project_id,"latestModelDeployment":True,"latestModelBuild":True}

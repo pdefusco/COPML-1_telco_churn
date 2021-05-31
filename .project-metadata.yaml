@@ -10,9 +10,17 @@ tasks:
   - type: create_job
     name: Train Model
     entity_label: train_model
-    script: code/train_model.py
+    script: code/model_train.py
     arguments: None
-    short_summary: Job to train models
+    short_summary: Train the model
+    kernel: python3
+
+  - type: create_job
+    name: Run Model Batch
+    entity_label: check_model
+    script: code/model_run_batch.py
+    arguments: None
+    short_summary: Run batch inference with model
     kernel: python3
 
   - type: create_job
@@ -20,7 +28,7 @@ tasks:
     entity_label: check_model
     script: code/model_check.py
     arguments: None
-    short_summary: Job to train models
+    short_summary: Check current model performance
     kernel: python3
 
   - type: create_model
@@ -62,7 +70,7 @@ tasks:
                     "TechSupport": "No",
                 }
         response: ""
-    target_file_path: code/serve_explained_model.py
+    target_file_path: code/model_serve.py
     target_function_name: explain
     kernel: python3
 
