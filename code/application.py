@@ -8,6 +8,7 @@
 
 # This has to be here until DSE-16317 is fixed.
 !pip3 install -r requirements.txt
+!pip3 install --upgrade git+https://github.com/fletchjeff/cmlbootstrap#egg=cmlbootstrap
 
 from flask import Flask, send_from_directory, request
 from IPython.display import Javascript, HTML
