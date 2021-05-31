@@ -77,6 +77,9 @@
 # Deeper red indicates incresed importance for predicting that a customer **will churn**
 # while deeper blue indicates incresed importance for predicting that a customer **will not**.
 #
+
+!pip3 install -r requirements.txt
+
 from flask import Flask, send_from_directory, request
 from IPython.display import Javascript, HTML
 import random
@@ -118,10 +121,10 @@ log.setLevel(logging.ERROR)
 
 # Since we have access in an environment variable, we want to write it to our UI
 # Change the line in the flask/single_view.html file.
-if os.environ.get('SHTM_ACCESS_KEY') != None:
-  access_key = os.environ.get('SHTM_ACCESS_KEY', "")
-  subprocess.call(["sed", "-i",  's/const\saccessKey.*/const accessKey = "' +
-                   access_key + '";/', "/home/cdsw/flask/single_view.html"])
+# if os.environ.get('SHTM_ACCESS_KEY') != None:
+#   access_key = os.environ.get('SHTM_ACCESS_KEY', "")
+#   subprocess.call(["sed", "-i",  's/const\saccessKey.*/const accessKey = "' +
+#                    access_key + '";/', "/home/cdsw/flask/single_view.html"])
 
 
 # Load the explained model
@@ -183,12 +186,28 @@ def categories():
                     for feat, cats in em.categories.items()})
 
 # Shows the names and all the statistical variations of the numerica variables.
-
-
 @flask_app.route("/stats")
 def stats():
     return jsonify(em.stats)
 
+
+@app.route("/model_access_keys")
+def model_access_keys():
+  cml = CMLBootstrap()
+  project_id = cml.get_project()['id']
+  params = {"projectId":project_id,"latestModelDeployment":True,"latestModelBuild":True}
+  for model in cml.get_models(params):
+    if model['name'] == 'XRay Model 1':
+      model_id_1 = model['id']
+    else:
+      model_id_2 = model['id']
+
+  latest_model_1 = cml.get_model({"id": model_id_1, "latestModelDeployment": True, "latestModelBuild": True})
+  latest_model_2 = cml.get_model({"id": model_id_2, "latestModelDeployment": True, "latestModelBuild": True})
+  return jsonify({
+    'model_1_access_key': latest_model_1['accessKey'],
+    'model_2_access_key': latest_model_2['accessKey']
+  })
 
 # A handy way to get the link if you are running in a session.
 HTML("<a href='https://{}.{}'>Open Table View</a>".format(
