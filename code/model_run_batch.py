@@ -35,8 +35,8 @@ latest_model = cml.get_model({"id": model_id, "latestModelDeployment": True, "la
 Model_CRN = latest_model ["crn"]
 Deployment_CRN = latest_model["latestModelDeployment"]["crn"]
   
-# Get 1000 samples  
-df_sample = df.sample(1000)
+# Get 500 samples  
+df_sample = df.sample(500)
 
 df_sample_clean = df_sample.\
   replace({'SeniorCitizen': {"1": 'Yes', "0": 'No'}}).\
