@@ -16,6 +16,7 @@ import pandas as pd
 import numpy as np
 import cdsw
 from cmlbootstrap import CMLBootstrap
+import re
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
@@ -155,6 +156,14 @@ time_stamp = int(round(time.time() * 1000))
 final_sdf = spark.createDataFrame(df)
 final_sdf = final_sdf.withColumn("time_stamp",lit(time_stamp))
 final_sdf.write.mode('append').format('parquet').saveAsTable('telco_churn_train')
+
+# Update `lineage.yml` file
+with open('/home/cdsw/lineage.yml', 'r+') as f:
+    text = f.read()
+    text = re.sub("training_date:\s\".*\"",'training_date: "{}"'.format(time_stamp),text)
+    f.seek(0)
+    f.write(text)
+    f.truncate()
 
 
 # Redploy the model

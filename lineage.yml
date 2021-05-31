@@ -1,6 +1,6 @@
 "Churn Model API Endpoint":
-  hive_table_qualified_names:                # this is a predefined key to link to training data
-    - "default.telco_churn@cm"               # the qualifiedName of the hive_table object representing                
-  metadata:                                  # this is a predefined key for additional metadata
-    training_file: "4_train_models.py"       # suggested use case: training file used
-    training_date: ""
+  hive_table_qualified_names:
+    - "default.telco_churn_train@cm"
+  metadata:
+    training_file: "code/model_train.py"
+    training_date: "1622484733411"
