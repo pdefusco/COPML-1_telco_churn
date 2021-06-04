@@ -1,3 +1,59 @@
+# COPML Example 1 - Telco Churn
+This repoistory is used as the first example in the [Continuous Operations for Production Machine Learning](https://linktothis.com) (COPML) document that provides a framework for maintaning machine learning projects in production. 
+
+This section follows the standard workflow for implementing machine learning projects. As this project should be deployed as an AMP, most of the artifacts should already be deployed. If you did not deploy the project as an AMP, you need to initialise the project first.
+
+### Initialize the Project
+There are a couple of steps needed at the start to configure the Project and Workspace 
+settings so each step will run sucessfully. You **must** run the project bootstrap 
+before running other steps. If you just want to launch the model interpretability 
+application without going through each step manually, then you can also deploy the 
+complete project. 
+
+***Project bootstrap***
+
+Open the file `0_bootstrap.py` in a normal workbench python3 session. You only need a 
+1 vCPU / 2 GiB instance. Once the session is loaded, click **Run > Run All Lines**. 
+This will file will create an Environment Variable for the project called **STORAGE**, 
+which is the root of default file storage location for the Hive Metastore in the 
+DataLake (e.g. `s3a://my-default-bucket`). It will also upload the data used in the 
+project to `$STORAGE/datalake/data/churn/`. The original file comes as part of this 
+git repo in the `raw` folder.
+
+This document is here for you to understand the specifics of what is invovled in each step of the workflow. The workflow process is outlined at the start of each step followed by the technical details that you should run to implement the project. 
+
+## Step 1: Clarify Business Requirements
+A fictitious telco business wants to predict which customers are likely to churn in order to be able to reduce the current churn rate (e.g. from 10% to 5%). In order to fulfil this objective the business needs to be able to predict the probability of any of its customers churning. Those deemed as ‘high risk’ can be entered into some sort of remediation process. For example, an offer of a free data or text package, or whatever the business has decided is the best course of action for retention. 
+
+The requirement from the business is to indentify the customers who are at risk of churning and make that available in a data table that other teams can then use to implemenat the remdial action.
+
+
+
+## Step 2: Assess Available Data
+The data science team assesses the customer-related data that’s available in the organization’s data warehouse and any relevant data that’s been made available from other sources and confirms it is accessible to the systems the data science teams will use for EDA and model training. In this particular case, the customer-related data includes demographics information, usage data, product mix, monthly charges, total charges etc. It is important that the available data includes both customers that have left (i.e. those that have churned) as well as existing customers who have not churned. 
+
+
+
+
+
+
+Step 3: Develop the Data Science Plan
+For this project, the plan is to build a binary classifier model that can classify a customer as a churn risk or not. This model can be applied to any existing customer. The data science team will create notebooks for conducting exploratory data analysis and for the machine learning model build.
+
+Step 4: Model Deployment 
+The model needs to be deployed into the place where its output is available to the relevant teams so they can fulfil the business requirement. Our illustrative code builds a real time model that can make new churn predictions for customers on the fly. However, the more common scenario would be one implemented using a batch process. For example, a batch job might be run once a week, its output would update a table or a list that is accessed by the team that’s tasked with implementing the customer retention strategy. 
+
+Step 5: Model Operations
+The model’s performance needs to be checked periodically. A good way to do this is to examine a proportion of the customers that the model made predictions for and assess the accuracy of those predictions  e.g. how many of those predicted to churn actually did? Alternatively, what are the precision and recall values of the model?  If the model performance falls below an acceptable level then it will be necessary to retrain the model.  The performance metrics in this scenario are relatively straightforward, but even one this simple can be hard to put into production within an enterprise context. For example, the choice about how often to assess the model’s performance is very dependent on the business circumstances and the consequences of inaccurate predictions or model drift. In this particular scenario, while timing matters it’s not the most important thing. Churn has business implications in the medium- to long-term but its short-term impact is limited. Therefore a delay of a few days for a performance assessment would probably be acceptable.
+
+
+
+
+
+
+
+
+
 
 # Churn Prediction Prototype
 This project is a Cloudera Machine Learning 
@@ -32,22 +88,7 @@ We trust that you are familiar with typical data science workflows
 and do not need detailed explanations of the code.
 Notes that are *specific to CML* will be emphasized in **block quotes**.
 
-### Initialize the Project
-There are a couple of steps needed at the start to configure the Project and Workspace 
-settings so each step will run sucessfully. You **must** run the project bootstrap 
-before running other steps. If you just want to launch the model interpretability 
-application without going through each step manually, then you can also deploy the 
-complete project. 
 
-***Project bootstrap***
-
-Open the file `0_bootstrap.py` in a normal workbench python3 session. You only need a 
-1 vCPU / 2 GiB instance. Once the session is loaded, click **Run > Run All Lines**. 
-This will file will create an Environment Variable for the project called **STORAGE**, 
-which is the root of default file storage location for the Hive Metastore in the 
-DataLake (e.g. `s3a://my-default-bucket`). It will also upload the data used in the 
-project to `$STORAGE/datalake/data/churn/`. The original file comes as part of this 
-git repo in the `raw` folder.
   
 ***Deploy the Complete Project***
 
