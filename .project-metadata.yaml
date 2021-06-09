@@ -44,7 +44,7 @@ tasks:
       num_replicas: 1
 
   - type: build_model
-    name: Build Telco Churn Model Endpoint
+    name: Churn Model Endpoint
     entity_label: telco_churn_model
     comment: Build churn model
     examples:
