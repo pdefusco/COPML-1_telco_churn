@@ -1,4 +1,4 @@
-# COPML Example 1 - Telco Churn
+# COPML Example 1 - Churn Prediction
 This repoistory is used as the first example in the [Continuous Operations for Production Machine Learning](https://linktothis.com) (COPML) document that provides a framework for maintaning machine learning projects in production. The goal is to build a classifier model using Logistic Regression to predict the churn probability for a group of customers from a telecoms company. 
 
 This section follows the standard workflow for implementing machine learning projects. As this project should be deployed as an AMP, most of the artifacts should already be deployed. 
