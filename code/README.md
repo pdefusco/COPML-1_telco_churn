@@ -11,7 +11,7 @@ There are a couple of steps needed at the start to configure the Project and Wor
 
 *Project bootstrap*
 
-Open the file `0_bootstrap.py` in a normal workbench python3 session. You only need a 1 vCPU / 2 GiB instance. Once the session is loaded, click **Run > Run All Lines**. This will file will create an Environment Variable for the project called **STORAGE**, which is the root of default file storage location for the Hive Metastore in the DataLake (e.g. `s3a://my-default-bucket`). It will also upload the data used in the project to `$STORAGE/datalake/data/churn/`. The original file comes as part of this git repo in the `data` folder.
+Open the file `_bootstrap.py` in a normal workbench python3 session. You only need a 1 vCPU / 2 GiB instance. Once the session is loaded, click **Run > Run All Lines**. This will file will create an Environment Variable for the project called **STORAGE**, which is the root of default file storage location for the Hive Metastore in the DataLake (e.g. `s3a://my-default-bucket`). It will also upload the data used in the project to `$STORAGE/datalake/data/churn/`. The original file comes as part of this git repo in the `data` folder.
 
 ## Step 1: Clarify Business Requirements
 A fictitious telco business wants to predict which customers are likely to churn in order to be able to reduce the current churn rate (e.g. from 10% to 5%). In order to fulfil this objective the business needs to be able to predict the probability of any of its customers churning. Those deemed as ‘high risk’ can be entered into some sort of remediation process. For example, an offer of a free data or text package, or whatever the business has decided is the best course of action for retention. 
