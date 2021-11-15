@@ -1,9 +1,9 @@
-name: ML Churn Prototype
-description: Prototype to demonstrate building a churn model on CML
+name: COPML-1 Telco Churn
+description: COPML project 1 to demonstrate building a churn model on CML
 author: Cloudera Inc.
 specification_version: 1.0
 prototype_version: 1.0
-date: "2020-09-29"
+date: "2021-11-01"
 api_version: 1
 runtimes:
   - editor: Workbench
