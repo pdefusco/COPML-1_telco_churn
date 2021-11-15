@@ -7,11 +7,9 @@
 
 
 # This has to be here until DSE-16317 is fixed.
-!pip3 install -r requirements.txt
-!pip3 install requests-kerberos==0.12.0 flask==1.1.2 boto3==1.17.84
-!pip3 install --upgrade git+https://github.com/fletchjeff/cmlbootstrap#egg=cmlbootstrap
-
-  
+#!pip3 install -r requirements.txt
+#!pip3 install requests-kerberos==0.12.0 flask==1.1.2 boto3==1.17.84
+#!pip3 install --upgrade git+https://github.com/fletchjeff/cmlbootstrap#egg=cmlbootstrap 
 import sys
 sys.path.insert(1, '/home/cdsw/code')
 

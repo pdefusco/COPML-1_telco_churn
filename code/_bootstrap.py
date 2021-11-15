@@ -9,7 +9,7 @@
 # abfs://[something] and on CDSW cluster, it will be hdfs://[something]
 
 # Install the requirements
-!pip3 install -r requirements.txt
+!pip3 install --progress-bar off -r requirements.txt
 !pip3 install --upgrade git+https://github.com/fastforwardlabs/cmlbootstrap#egg=cmlbootstrap
 
 # Create the directories and upload data
