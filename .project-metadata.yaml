@@ -5,8 +5,19 @@ specification_version: 1.0
 prototype_version: 1.0
 date: "2020-09-29"
 api_version: 1
+runtimes:
+  - editor: Workbench
+    kernel: Python 3.7
+    edition: Standard
 
 tasks:
+  - type: run_session
+    name: Run the bootstrap.py
+    script: code/_bootstrap.py
+    memory: 2
+    cpu: 1
+    gpu: 0
+
   - type: create_job
     name: Train Model
     entity_label: train_model
