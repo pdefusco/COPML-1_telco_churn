@@ -107,14 +107,14 @@ tasks:
     cpu: 1
     gpu: 0
 
-- type: run_job
-  entity_label: train_model
-  short_summary: Run the model training job
+  - type: run_job
+    entity_label: train_model
+    short_summary: Run the model training job
 
-- type: run_job
-  entity_label: model_batch
-  short_summary: Run the model batch inference job
+  - type: run_job
+    entity_label: model_batch
+    short_summary: Run the model batch inference job
 
-- type: run_job
-  entity_label: check_model
-  short_summary: Run the check model job
+  - type: run_job
+    entity_label: check_model
+    short_summary: Run the check model job
