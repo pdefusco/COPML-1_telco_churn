@@ -37,4 +37,4 @@ except:
 !hdfs dfs -mkdir -p $STORAGE/user/$HADOOP_USER_NAME
 !hdfs dfs -mkdir -p $STORAGE/user/$HADOOP_USER_NAME/data
 !hdfs dfs -mkdir -p $STORAGE/user/$HADOOP_USER_NAME/data/churn
-!hdfs dfs -copyFromLocal /home/cdsw/raw/WA_Fn-UseC_-Telco-Customer-Churn-.csv $STORAGE/user/$HADOOP_USER_NAME/data/churn/WA_Fn-UseC_-Telco-Customer-Churn-.csv
+!hdfs dfs -copyFromLocal /home/cdsw/data/WA_Fn-UseC_-Telco-Customer-Churn-.csv $STORAGE/user/$HADOOP_USER_NAME/data/churn/WA_Fn-UseC_-Telco-Customer-Churn-.csv

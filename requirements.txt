@@ -5,3 +5,4 @@ xlrd==1.2.0
 pandas==0.25.1
 numpy==1.17.2
 Flask==2.0.2
+seaborn==0.11.2

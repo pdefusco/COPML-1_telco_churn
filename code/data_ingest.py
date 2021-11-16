@@ -54,10 +54,11 @@ schema = StructType(
 # Now we can read in the data from Cloud Storage into Spark...
 
 storage = os.environ['STORAGE']
+hadoop_user = os.environ['HADOOP_USER_NAME']
 
 telco_data = spark.read.csv(
-    "{}/datalake/data/churn/WA_Fn-UseC_-Telco-Customer-Churn-.csv".format(
-        storage),
+    "{}/user/{}/data/churn/WA_Fn-UseC_-Telco-Customer-Churn-.csv".format(
+        storage,hadoop_user),
     header=True,
     schema=schema,
     sep=',',

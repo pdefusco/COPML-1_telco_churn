@@ -12,11 +12,18 @@ runtimes:
 
 tasks:
   - type: run_session
-    name: Run the bootstrap.py
+    name: Run the Bootstrap Script
     script: code/_bootstrap.py
     memory: 2
     cpu: 1
     gpu: 0
+
+  - type: run_session
+    name: Ingest Data to Hive
+    script: code/data_ingest.py
+    memory: 2
+    cpu: 1
+    gpu: 0    
 
   - type: create_job
     name: Train Model
@@ -28,7 +35,7 @@ tasks:
 
   - type: create_job
     name: Run Model Batch
-    entity_label: check_model
+    entity_label: model_batch
     script: code/model_run_batch.py
     arguments: None
     short_summary: Run batch inference with model
@@ -99,3 +106,15 @@ tasks:
     memory: 1
     cpu: 1
     gpu: 0
+
+- type: run_job
+  entity_label: train_model
+  short_summary: Run the model training job
+
+- type: run_job
+  entity_label: model_batch
+  short_summary: Run the model batch inference job
+
+- type: run_job
+  entity_label: check_model
+  short_summary: Run the check model job
