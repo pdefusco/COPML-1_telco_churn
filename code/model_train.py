@@ -71,7 +71,7 @@ try:
 except:
     print("Hive table has not been created")
     df = pd.read_csv(os.path.join(
-        'raw', 'WA_Fn-UseC_-Telco-Customer-Churn-.csv'))
+        'data', 'WA_Fn-UseC_-Telco-Customer-Churn-.csv'))
 
 # Clean and shape the data from lr and LIME
 df = df.replace(r'^\s$', np.nan, regex=True).dropna().reset_index()
