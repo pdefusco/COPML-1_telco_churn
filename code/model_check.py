@@ -7,26 +7,62 @@ import pandas as pd
 from sklearn.metrics import classification_report
 from cmlbootstrap import CMLBootstrap
 
-cml = CMLBootstrap()
+
 
 # replace this with these values relevant values from the project
-
+cml = CMLBootstrap()
 for job in cml.get_jobs():
   if job['name'] == "Train Model":
     job_id = job['name']
 
-project_id = cml.get_project()['id']
-params = {"projectId":project_id,"latestModelDeployment":True,"latestModelBuild":True}
-model_id = cml.get_models(params)[0]['id']
+
+import cmlapi
+try:
+    client = cmlapi.default_client()
+except ValueError:
+    print("Could not create a client. If this code is not being run in a CML session, please include the keyword arguments \"url\" and \"cml_api_key\".")
+
+project_id = os.environ["CDSW_PROJECT_ID"]
+    
+# gather model details
+model = (
+    client.list_models(project_id=project_id, async_req=True)
+    .get()
+    .to_dict()
+)
+
+model_id = model["models"][0]["id"]
+model_crn = model["models"][0]["crn"]
+
+builds = (
+    client.list_model_builds(
+        project_id=project_id, model_id=model_id, async_req=True
+    )
+    .get()
+    .to_dict()
+)
+build_info = builds["model_builds"][-1]  # most recent build
+
+build_id = build_info["id"]
 
 
-latest_model = cml.get_model({"id": model_id, "latestModelDeployment": True, "latestModelBuild": True})
+# gather latest deployment details
+deployments = (
+    client.list_model_deployments(
+        project_id=project_id,
+        model_id=model_id,
+        build_id=build_id,
+        async_req=True
+    )
+    .get()
+    .to_dict()
+)
+deployment_info = deployments["model_deployments"][-1]  
 
-Model_CRN = latest_model ["crn"]
-Deployment_CRN = latest_model["latestModelDeployment"]["crn"]
+model_deployment_crn = deployment_info["crn"]
 
 # Read in the model metrics dict.
-model_metrics = cdsw.read_metrics(model_crn=Model_CRN,model_deployment_crn=Deployment_CRN)
+model_metrics = cdsw.read_metrics(model_crn=model_crn,model_deployment_crn=model_deployment_crn)
 
 # This is a handy way to unravel the dict into a big pandas dataframe.
 metrics_df = pd.io.json.json_normalize(model_metrics["metrics"])
